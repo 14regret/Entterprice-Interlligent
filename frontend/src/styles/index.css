@@ -1,0 +1,231 @@
+@import "tailwindcss";
+@import "@fontsource-variable/archivo/wght.css";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — "Index Desk"
+   Porcelain work surface, graphite-green rail, verdigris as the only accent.
+   Hairlines instead of shadows; numbers set in tabular figures.
+   --------------------------------------------------------------------------- */
+@theme {
+  --font-sans:
+    "Archivo Variable", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI",
+    "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono:
+    "Cascadia Mono", "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono",
+    monospace;
+
+  --color-canvas: #f0f1ec;
+  --color-surface: #fbfbf8;
+  --color-raise: #e7e9e2;
+  --color-ink: #151916;
+  --color-ink-2: #39423b;
+  --color-muted: #646e67;
+  --color-line: #d7dad1;
+  --color-line-strong: #b9beb3;
+
+  --color-rail: #151a17;
+  --color-rail-2: #202822;
+  --color-rail-line: #2c352f;
+  --color-rail-ink: #e9ebe4;
+  --color-rail-muted: #939d95;
+
+  --color-accent: #1f6b5a;
+  --color-accent-2: #3fa98f;
+  --color-accent-soft: #dfe9e3;
+  --color-focus: #2e8b75;
+  --color-signal: #b0472a;
+  --color-warn: #96701f;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior: none;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #f4f8f5;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  ::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+  }
+
+  /* Browser surfaces carry the palette too. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border: 3px solid var(--color-canvas);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  textarea {
+    caret-color: var(--color-accent);
+  }
+}
+
+@layer utilities {
+  .scroll-rail {
+    scrollbar-color: var(--color-rail-line) transparent;
+  }
+
+  .scroll-rail::-webkit-scrollbar-thumb {
+    background: var(--color-rail-line);
+    border-color: var(--color-rail);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Streaming caret: a measured block, not a blinking pipe. */
+@layer components {
+  .type-caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1.02em;
+    margin-left: 0.09em;
+    vertical-align: -0.14em;
+    background: var(--color-accent);
+    animation: caret-blink 1.15s steps(1, end) infinite;
+  }
+
+  .scan-line {
+    position: relative;
+    height: 1px;
+    overflow: hidden;
+    background: var(--color-line);
+  }
+
+  .scan-line::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 26%;
+    background: var(--color-accent);
+    animation: scan 1.5s var(--ease-out-quart) infinite;
+  }
+
+  .rail-scan::after {
+    background: var(--color-accent-2);
+  }
+
+  .wave-flow {
+    animation: wave-pan 9s linear infinite;
+    will-change: transform;
+  }
+}
+
+@keyframes caret-blink {
+  0%,
+  46% {
+    opacity: 1;
+  }
+  54%,
+  100% {
+    opacity: 0.12;
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(420%);
+  }
+}
+
+@keyframes wave-pan {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .type-caret,
+  .scan-line::after,
+  .wave-flow {
+    animation: none;
+  }
+
+  .type-caret {
+    opacity: 0.6;
+  }
+
+  .scan-line::after {
+    width: 100%;
+    opacity: 0.4;
+  }
+}
